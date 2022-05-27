@@ -1,0 +1,138 @@
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>가위바위보</title>
+  <style>
+    #computer {
+      width: 142px;
+      height: 200px;
+    }
+  </style>
+</head>
+
+<body>
+<div id="computer"></div>
+<div>
+  <button id="scissors" class="btn">가위</button>
+  <button id="rock" class="btn">바위</button>
+  <button id="paper" class="btn">보</button>
+</div>
+<div id="score">0</div>
+<div id='result'>결과 :<div id="result2"></div><div id = "try"></div></div>
+<script>
+  const $computer = document.querySelector('#computer');
+  const $score = document.querySelector('#score');
+  const $rock = document.querySelector('#rock');
+  const $scissors = document.querySelector('#scissors');
+  const $paper = document.querySelector('#paper');
+  const IMG_URL = './rsp.png';
+  const $result = document.querySelector('#result2')
+  const $try = document.querySelector('#try');
+  const rspx = {
+      scissors : '0',
+      rock : '-220px',
+      paper : '-440px',
+  }
+  $computer.style.background = `url(${IMG_URL})  0`; //가위
+  $computer.style.background = `url(${IMG_URL}) -220px 0`; //바위
+  $computer.style.background = `url(${IMG_URL}) -440px 0`; //보
+  $computer.style.backgroundSize = 'auto 200px';
+  let coord = '0'
+let clickable = true; 
+let score = 0;
+let computer = 0;
+let myscore = 0;
+const rsp = {
+    scissors :1 ,
+    rock :0 ,
+    paper :-1,
+
+}
+const changehand = () =>{
+    
+    if(coord === rspx.scissors){
+          
+          coord = rspx.rock
+          computerchoice ='rock'
+      }else if(coord ===rspx.rock){
+        
+          coord = rspx.paper
+          computerchoice ='paper'
+      }else if (coord ===rspx.paper) {
+          coord = rspx.scissors
+          computerchoice = 'scissors'
+        }
+        
+        $computer.style.background= `url(${IMG_URL}) ${rspx[computerchoice]} 0` ;
+        $computer.style.backgroundSize = 'auto 200px';
+    }
+    let stop = setInterval(changehand , 50);
+    
+    
+const onClickbutton = () =>{
+    clearInterval(stop)
+    const mychoice = event.target.textContent ==='바위' ? 'rock' 
+                                        :event.target.textContent ==='가위' ? 'scissors' 
+                                        :'paper';
+
+    const diff = rsp[mychoice]-rsp[computerchoice]
+    scorecal(diff)
+    console.log(diff)
+    if (clickable){
+        clickable = false;
+    setTimeout(() =>{
+        clickable = true
+       stop =  setInterval(
+            changehand, 50);
+    },1000)
+}
+    
+}
+const setinit = () =>{
+    let score = 0;
+    let computer = 0;
+    let myscore = 0;
+}
+
+const scorecal = (diff) =>{
+    
+    
+    if( diff ===0 ){
+        
+        $score.textContent = score;
+        $result.textContent = '무승부'
+        $try.textContent = `5판 3선 승 나의 이긴 횟수:${myscore} 컴퓨터 이긴 횟수: ${computer}`
+    }
+    else if (diff ===-1 || diff ===2) {
+        score += 1
+        $score.textContent = score
+        
+        $result.textContent = 'win'
+        myscore += 1;
+        $try.textContent = `5판 3선 승 나의 이긴 횟수:${myscore} 컴퓨터 이긴 횟수: ${computer}`
+    }
+    else{
+        score = score -1
+        $score.textContent = score
+        $result.textContent = 'lose'
+        computer +=1;
+        $try.textContent = `5판 3선 승 나의 이긴 횟수:${myscore} 컴퓨터 이긴 횟수: ${computer}`
+    }
+
+    if (myscore === 3){
+        alert("나의 승리")
+        
+    }
+    else if (computer ===3){
+        alert("컴퓨터 승리")
+        
+    }
+}
+
+
+$scissors.addEventListener('click' , onClickbutton)
+$rock.addEventListener('click', onClickbutton)
+$paper.addEventListener('click', onClickbutton)
+</script>
+</body>
+</html>
