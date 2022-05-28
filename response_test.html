@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>반응속도</title>
+<style>
+  #screen {
+    width: 300px;
+    height: 200px;
+    text-align: center;
+    user-select: none;
+  }
+  #screen.waiting {
+    background-color: aqua;
+  }
+  #screen.ready {
+    background-color: red;
+    color: white;
+  }
+  #screen.now {
+    background-color: greenyellow;
+  }
+</style>
+</head>
+
+<body>
+<div id="screen" class="waiting">클릭해서 시작하세요</div>
+<div id="result"></div>
+<script>
+const $screen = document.querySelector('#screen');
+const $result = document.querySelector('#result');
+const number = 0;
+let starttime =''
+let endtime =''
+let settimeoutid ='' 
+let mytime=''
+let record = []
+
+$screen.addEventListener('click' , ()=> {
+    if($screen.className==='waiting') {
+        $screen.className ='ready';
+        $screen.textContent= '초록색 화면이 나오면 클릭하세요'
+        settimeoutid = setTimeout(()=> {
+        $screen.className = 'now'
+        starttime= new Date().getTime();
+        $screen.textContent='클릭하세요'
+        
+        },Math.random()*10000)
+    }else if($screen.className ==='ready'){
+        
+        alert("성급하셨습니다.");
+        $screen.className='waiting'
+        $screen.className = '클릭해서 시작하세요'
+        clearTimeout(settimeoutid);
+        console.log("청소 완료")
+    }else if($screen.className ==='now'){
+        endtime = new Date().getTime();
+        mytime =endtime -starttime; 
+        record.push(mytime)
+        const average = record.reduce( (a,c) => a+c )/record.length
+        $result.textContent=`현재 ${mytime}ms ,평균: ${average}`
+        $screen.classList.remove('now')
+        $screen.classList.add('waiting')
+
+        const topfive = record.sort((a,b)=> a-b).slice(0,5);
+
+        topfive.forEach((val ,index ) => {
+            $result.append(document.createElement('br') , `${index+1}위  ${val}ms`)
+        });
+    }
+})
+</script>
+</body>
+</html>
